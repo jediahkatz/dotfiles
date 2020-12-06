@@ -1,0 +1,1 @@
+/home/jediahkatz/.p10k.zsh
