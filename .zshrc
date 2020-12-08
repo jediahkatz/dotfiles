@@ -192,5 +192,48 @@ fif() {
   rg --files-with-matches --no-messages "$1" | fzf $FZF_PREVIEW_WINDOW --preview "rg --ignore-case --pretty --context 10 '$1' {}"
 }
 
+# Python-style slices for files (by jediahkatz)
+# Ex: slice "1:5:1", slice "-3", slice ":5:-1"
+slice() {
+  local slicearr=("${(@s/:/)1}")
+  local start=${slicearr[1]:-0}
+  local stop=${slicearr[2]:-""}
+  local step=${slicearr[3]:-1}
+  if [ $step -eq "0" ]; then
+    echo "Slice step cannot be 0.";
+    return 1;
+  fi
+  if [ $start -ge "0" ];
+    # Adding 1 because tail is 1-indexed
+    then local slice_fromstart=(tail -n "+$(($start + 1))")
+    else local slice_fromstart=(tail -n "$((-1 * $start))")
+  fi
+  if [ -z $stop ]; then
+    local slice_tostop=(cat)
+  elif [ $stop -ge "0" ]; then
+    if [ $start -ge "0" ];
+      # Adding 1 because head is 1-indexed
+      then local slice_tostop=(head -n "$(($stop - $start + 1))")
+      # Hard case
+      else
+        echo "Slices like [-5:10] are unsupported... implement this if ever needed."
+        return 1;
+    fi
+  else
+    local slice_tostop=(head -n $stop)
+  fi
+  local slice_mayberev=(cat)
+  if [ $step -lt "0" ]; then
+    local slice_mayberev=(tac)
+    local step=$((-1 * step))
+  fi
+  if [ $step -eq "1" ]; then
+    local slice_step=(cat)
+  else
+    local slice_step=(awk 'NR%$step==1')
+  fi
+  cat $2 | $slice_fromstart | $slice_tostop | $slice_mayberev | $slice_step
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
