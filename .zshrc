@@ -75,7 +75,12 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker docker-compose fzf zsh-z zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(
+    git gitfast
+    docker docker-compose
+    fzf
+    zsh-z zsh-autosuggestions zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -126,6 +131,11 @@ if type rg &> /dev/null && type fdfind &> /dev/null; then
     # But ripgrep has terrible directory search so we'll use fd
     export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
 fi
+
+# Fix slooooow git autocompletion
+__git_files () {
+    _wanted files expl 'local files' _files
+}
 
 # Copy to clipboard and remove trailing newlines
 function copy() {
@@ -234,6 +244,9 @@ slice() {
   fi
   cat $2 | $slice_fromstart | $slice_tostop | $slice_mayberev | $slice_step
 }
+
+# Use hub to wrap git
+function git() { hub $@; }
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
