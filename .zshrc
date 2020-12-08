@@ -248,5 +248,10 @@ slice() {
 # Use hub to wrap git
 function git() { hub $@; }
 
+# Send a notification (since `tput bel` is broken)
+function notify() {
+  powershell.exe -ExecutionPolicy Bypass "New-BurntToastNotification -Text \"${1:-`date`}\""
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
