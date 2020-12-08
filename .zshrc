@@ -253,5 +253,20 @@ function notify() {
   powershell.exe -ExecutionPolicy Bypass "New-BurntToastNotification -Text \"${1:-`date`}\""
 }
 
+# Find and kill a windows process
+function winkill() {
+  # -f = force
+  if [ -v $1 ]; then
+    local f_flag=""
+  elif [ $1 = "-f" ]; then
+    local f_flag="/F"
+  else
+    echo "Invalid option to winkill: $1"
+    return 1
+  fi
+  local pid=`tasklist.exe | fzf | awk '{print $2}'`
+  taskkill.exe $f_flag /PID $pid
+}
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
