@@ -203,7 +203,7 @@ fif() {
 }
 
 # Python-style slices for files (by jediahkatz)
-# Ex: slice "1:5:1", slice "-3", slice ":5:-1"
+# Ex: slice "1:5:2", slice "-3:", slice ":5:-1"
 slice() {
   local slicearr=("${(@s/:/)1}")
   local start=${slicearr[1]:-0}
@@ -222,8 +222,7 @@ slice() {
     local slice_tostop=(cat)
   elif [ $stop -ge "0" ]; then
     if [ $start -ge "0" ];
-      # Adding 1 because head is 1-indexed
-      then local slice_tostop=(head -n "$(($stop - $start + 1))")
+      then local slice_tostop=(head -n "$(($stop - $start))")
       # Hard case
       else
         echo "Slices like [-5:10] are unsupported... implement this if ever needed."
