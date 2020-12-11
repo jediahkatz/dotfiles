@@ -154,10 +154,10 @@ function open() {
 }
 
 # Always work in a tmux session if tmux is installed
-# https://github.com/chrishunt/dot-files/blob/master/.zshrc
+# Modified from https://github.com/chrishunt/dot-files/blob/master/.zshrc
 if which tmux 2>&1 >/dev/null; then
   if [ $TERM != "screen-256color" ] && [  $TERM != "screen" ]; then
-    tmux attach -t sesh || tmux new -s sesh; exit
+    tmux new-session -A -s sesh && exit || { :; cmd.exe /C wt; exit }
   fi
 fi
 
