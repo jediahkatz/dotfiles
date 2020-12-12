@@ -193,13 +193,13 @@ for method in GET HEAD POST PUT DELETE TRACE OPTIONS; do
   alias "${method}"="lwp-request -m '${method}'"
 done
 
-# find-in-file (by gbstan) - usage: fif <SEARCH_TERM>
+# find-in-file (adapted from gbstan) - usage: fif <SEARCH_TERM> <SEARCH_DIR (optional)>
 fif() {
   if [ ! "$#" -gt 0 ]; then
     echo "Need a string to search for!";
     return 1;
   fi
-  rg --files-with-matches --no-messages "$1" | fzf $FZF_PREVIEW_WINDOW --preview "rg --ignore-case --pretty --context 10 '$1' {}"
+  rg --files-with-matches --no-messages "$1" "${2:-.}" | fzf $FZF_PREVIEW_WINDOW --preview "rg --ignore-case --pretty --context 10 '$1' {}"
 }
 
 # Python-style slices for files (by jediahkatz)
