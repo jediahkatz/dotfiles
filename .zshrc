@@ -101,6 +101,13 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# Set $WSL variable to 1 if we are on WSL else 0
+if rg -q microsoft /proc/version; then
+  WSL=1
+else
+  WSL=0
+fi
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -110,6 +117,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ls="lsd"
+alias cat="batcat"
 alias jedia="cd /mnt/c/Users/jedia"
 alias reload="exec ${SHELL} -l"
 alias path="echo -e '${PATH//:/\\n}'"
@@ -127,31 +135,33 @@ zstyle ':completion:*:man:*'      menu yes select
 
 # Use ripgrep instead of find for fzf
 if type rg &> /dev/null && type fdfind &> /dev/null; then
-    export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
-    # But ripgrep has terrible directory search so we'll use fd
-    export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
+  export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
+  # But ripgrep has terrible directory search so we'll use fd
+  export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
 fi
 
 # Fix slooooow git autocompletion
 __git_files () {
-    _wanted files expl 'local files' _files
+  _wanted files expl 'local files' _files
 }
 
 # Copy to clipboard and remove trailing newlines
 function copy() {
-    sed -Ez '$ s/\n+$//' $1 | clip.exe
+  sed -Ez '$ s/\n+$//' $1 | clip.exe
 }
 
 # Open folders in explorer / open files in the default application
-function open() {
-  declare arg="${1:-$(</dev/stdin)}";
-  if [ -z $arg ]
-    then explorer.exe
-  elif [ -e $arg ]
-    then explorer.exe `wslpath -aw $arg`
-    else explorer.exe $arg
-  fi
-}
+if [ "$WSL" = 1 ]; then
+  function open() {
+    declare arg="${1:-$(</dev/stdin)}";
+    if [ -z $arg ]
+      then explorer.exe
+    elif [ -e $arg ]
+      then explorer.exe `wslpath -aw $arg`
+      else explorer.exe $arg
+    fi
+  }
+fi
 
 # Always work in a tmux session if tmux is installed
 # Modified from https://github.com/chrishunt/dot-files/blob/master/.zshrc
@@ -247,25 +257,35 @@ slice() {
 # Use hub to wrap git
 function git() { hub $@; }
 
-# Send a notification (since `tput bel` is broken)
-function notify() {
-  powershell.exe -ExecutionPolicy Bypass "New-BurntToastNotification -Text \"${1:-`date`}\""
-}
+##################################
+########## WSL ONLY CONFIGURATIONS
 
-# Find and kill a windows process
-function winkill() {
-  # -f = force
-  if [ -v $1 ]; then
-    local f_flag=""
-  elif [ $1 = "-f" ]; then
-    local f_flag="/F"
-  else
-    echo "Invalid option to winkill: $1"
-    return 1
-  fi
-  local pid=`tasklist.exe | fzf | awk '{print $2}'`
-  taskkill.exe $f_flag /PID $pid
-}
+if [ "$WSL" = 1 ]; then
+
+  # Send a notification (since `tput bel` is broken)
+  function notify() {
+    powershell.exe -ExecutionPolicy Bypass "New-BurntToastNotification -Text \"${1:-`date`}\""
+  }
+
+  # Find and kill a windows process
+  function winkill() {
+    # -f = force
+    if [ -v $1 ]; then
+      local f_flag=""
+    elif [ $1 = "-f" ]; then
+      local f_flag="/F"
+    else
+      echo "Invalid option to winkill: $1"
+      return 1
+    fi
+    local pid=`tasklist.exe | fzf | awk '{print $2}'`
+    taskkill.exe $f_flag /PID $pid
+  }
+
+fi
+
+######### END WSL ONLY CONFIGURATIONS
+#####################################
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
