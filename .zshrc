@@ -101,12 +101,17 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+# Add golang to PATH
+export PATH=$PATH:/usr/local/go/bin:~/go/bin
+
 # Set $WSL variable to 1 if we are on WSL else 0
 if rg -q microsoft /proc/version; then
   WSL=1
 else
   WSL=0
 fi
+
+TLDR_OS=linux
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -120,7 +125,7 @@ alias ls="lsd"
 alias cat="batcat"
 alias jedia="cd /mnt/c/Users/jedia"
 alias reload="exec ${SHELL} -l"
-alias path="echo -e '${PATH//:/\\n}'"
+alias path="echo -e '${PATH//:/\\n}' | cat"
 alias help="nano -v ~/.help"
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
@@ -173,7 +178,7 @@ fi
 
 # Only load nodejs when needed
 lazynvm() {
-  unset -f nvm node npm tldr
+  unset -f nvm node npm
   export NVM_DIR=~/.nvm
   [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 }
@@ -191,11 +196,6 @@ node() {
 npm() {
   lazynvm
   npm $@
-}
-
-tldr() {
-  lazynvm
-  tldr $@
 }
 
 # One of @janmoesen’s ProTip™s
