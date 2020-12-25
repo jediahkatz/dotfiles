@@ -171,7 +171,9 @@ fi
 # Always work in a tmux session if tmux is installed
 # Modified from https://github.com/chrishunt/dot-files/blob/master/.zshrc
 if which tmux 2>&1 >/dev/null; then
-  if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
+  if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] \
+  && [ "$TERM_PROGRAM" != "vscode" ] && [ "$USING_VSCODE" != "true" ] \
+  && [ -n "$WT_SESSION" ]; then
     tmux new-session -A -s sesh && exit || { :; cmd.exe /C wt; exit }
   fi
 fi
@@ -254,6 +256,13 @@ slice() {
   cat $2 | $slice_fromstart | $slice_tostop | $slice_mayberev | $slice_step
 }
 
+# Set special env var when opening vscode from zsh
+function code() {
+  USING_VSCODE=true
+  command code $@
+  unset USING_VSCODE
+}
+
 # Use hub to wrap git
 function git() { hub $@; }
 
@@ -279,7 +288,7 @@ if [ "$WSL" = 1 ]; then
       return 1
     fi
     local pid=`tasklist.exe | fzf | awk '{print $2}'`
-    taskkill.exe $f_flag /PID $pid
+    taskkill.exe $f_flag /PID "$pid"
   }
 
 fi
