@@ -133,6 +133,9 @@ alias help="nano -v ~/.help"
 # https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
 alias map="xargs -n1"
 
+# Use Ctrl+Backspace to delete previous word
+bindkey '^H' backward-kill-word
+
 # Enable completion from man pages
 zstyle ':completion:*:manuals'    separate-sections true
 zstyle ':completion:*:manuals.*'  insert-sections   true
