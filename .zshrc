@@ -261,9 +261,7 @@ slice() {
 
 # Set special env var when opening vscode from zsh
 function code() {
-  USING_VSCODE=true
-  command code $@
-  unset USING_VSCODE
+  USING_VSCODE=true command code $@
 }
 
 # Use hub to wrap git
