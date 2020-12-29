@@ -102,7 +102,7 @@ source $ZSH/oh-my-zsh.sh
 # export ARCHFLAGS="-arch x86_64"
 
 # Add golang to PATH
-export PATH=$PATH:/usr/local/go/bin:~/go/bin
+# export PATH=$PATH:/usr/local/go/bin:~/go/bin
 
 # Set $WSL variable to 1 if we are on WSL else 0
 if rg -q microsoft /proc/version; then
