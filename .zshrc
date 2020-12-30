@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/jediahkatz/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -105,7 +105,7 @@ source $ZSH/oh-my-zsh.sh
 # export PATH=$PATH:/usr/local/go/bin:~/go/bin
 
 # Set $WSL variable to 1 if we are on WSL else 0
-if rg -q microsoft /proc/version; then
+if test -f /proc/version && rg -q microsoft /proc/version; then
   WSL=1
 else
   WSL=0
