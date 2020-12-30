@@ -78,7 +78,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
     git gitfast
     docker docker-compose
-    fzf
+    fzf fzf-tab
     zsh-z zsh-autosuggestions zsh-syntax-highlighting
 )
 
