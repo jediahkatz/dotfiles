@@ -104,14 +104,16 @@ source $ZSH/oh-my-zsh.sh
 # Add golang to PATH
 # export PATH=$PATH:/usr/local/go/bin:~/go/bin
 
-# Set $WSL variable to 1 if we are on WSL else 0
+# Set $SH_OS variable
 if test -f /proc/version && rg -q microsoft /proc/version; then
-  WSL=1
+  SH_OS="WSL"
+elif [[ "$OSTYPE" = "darwin"* ]]; then
+  SH_OS="OSX"
+elif [[ "$OSTYPE" = "linux-gnu"* ]]; then
+  SH_OS="LINUX"
 else
-  WSL=0
+  SH_OS="OTHER"
 fi
-
-TLDR_OS=linux
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -122,7 +124,6 @@ TLDR_OS=linux
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ls="lsd"
-alias cat="batcat"
 alias jedia="cd /mnt/c/Users/jedia"
 alias reload="exec ${SHELL} -l"
 alias path="echo -e '${PATH//:/\\n}' | cat"
@@ -132,6 +133,12 @@ alias help="nano -v ~/.help"
 # find . -name .gitattributes | map dirname
 # https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
 alias map="xargs -n1"
+if [ "$SH_OS" = "WSL" ]; then
+  alias cat="batcat"
+  alias fd="fdfind"
+else
+  alias cat="bat"
+fi
 
 # Use Ctrl+Backspace to delete previous word
 bindkey '^H' backward-kill-word
@@ -142,7 +149,7 @@ zstyle ':completion:*:manuals.*'  insert-sections   true
 zstyle ':completion:*:man:*'      menu yes select
 
 # Use ripgrep instead of find for fzf
-if type rg &> /dev/null && type fdfind &> /dev/null; then
+if type rg &> /dev/null && type fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
   # But ripgrep has terrible directory search so we'll use fd
   export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
@@ -154,20 +161,13 @@ __git_files () {
 }
 
 # Copy to clipboard and remove trailing newlines
-function copy() {
-  sed -Ez '$ s/\n+$//' $1 | clip.exe
-}
-
-# Open folders in explorer / open files in the default application
-if [ "$WSL" = 1 ]; then
-  function open() {
-    declare arg="${1:-$(</dev/stdin)}";
-    if [ -z $arg ]
-      then explorer.exe
-    elif [ -e $arg ]
-      then explorer.exe `wslpath -aw $arg`
-      else explorer.exe $arg
-    fi
+if [ "$SH_OS" = "WSL" ]; then
+  function copy() {
+    sed -Ez '$ s/\n+$//' $1 | clip.exe
+  }
+elif [ "$SH_OS" = "OSX" ]; then
+  function copy() {
+    perl -pe 'chomp if eof' $1 | pbcopy
   }
 fi
 
@@ -176,7 +176,7 @@ fi
 if which tmux 2>&1 >/dev/null; then
   if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] \
   && [ "$TERM_PROGRAM" != "vscode" ] && [ "$USING_VSCODE" != "true" ] \
-  && [ -n "$WT_SESSION" ]; then
+  && [[ -n "$WT_SESSION" || "$SH_OS" != "WSL" ]]; then
     tmux new-session -A -s sesh && exit || { :; cmd.exe /C wt; exit }
   fi
 fi
@@ -270,7 +270,7 @@ function git() { hub $@; }
 ##################################
 ########## WSL ONLY CONFIGURATIONS
 
-if [ "$WSL" = 1 ]; then
+if [ "$SH_OS" = "WSL" ]; then
 
   # Send a notification (since `tput bel` is broken)
   function notify() {
@@ -290,6 +290,17 @@ if [ "$WSL" = 1 ]; then
     fi
     local pid=`tasklist.exe | fzf | awk '{print $2}'`
     taskkill.exe $f_flag /PID "$pid"
+  }
+
+  # Open folders in explorer / open files in the default application
+  function open() {
+    declare arg="${1:-$(</dev/stdin)}";
+    if [ -z $arg ]
+      then explorer.exe
+    elif [ -e $arg ]
+      then explorer.exe `wslpath -aw $arg`
+      else explorer.exe $arg
+    fi
   }
 
 fi
