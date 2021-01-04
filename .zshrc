@@ -101,8 +101,7 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# Add golang to PATH
-# export PATH=$PATH:/usr/local/go/bin:~/go/bin
+export EDITOR='nano'
 
 # Set $SH_OS variable
 if test -f /proc/version && rg -q microsoft /proc/version; then
