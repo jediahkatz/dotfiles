@@ -140,8 +140,12 @@ else
   alias cat="bat"
 fi
 
-# Use Ctrl+Backspace to delete previous word
-bindkey '^H' backward-kill-word
+# Use Ctrl+Backspace (WSL) or Option+Backspace (OSX) to delete previous word
+if [ "$SH_OS" = "WSL" ]; then
+  bindkey '^H' backward-kill-word
+elif [ "$SH_OS" = "OSX" ]; then
+  bindkey '^[^H' backward-kill-word
+fi
 
 # Enable completion from man pages
 zstyle ':completion:*:manuals'    separate-sections true
@@ -152,7 +156,11 @@ zstyle ':completion:*:man:*'      menu yes select
 if type rg &> /dev/null && type fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
   # But ripgrep has terrible directory search so we'll use fd
-  export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
+  if [ "$SH_OS" = "WSL" ]; then
+    export FZF_ALT_C_COMMAND="fd -t d . ~ /mnt/c/Users/jedia"
+  else
+    export FZF_ALT_C_COMMAND="fd -t d . ~"
+  fi
 fi
 
 # Fix slooooow git autocompletion
