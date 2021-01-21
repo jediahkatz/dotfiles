@@ -156,7 +156,7 @@ if type rg &> /dev/null && type fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
   # But ripgrep has terrible directory search so we'll use fd
   if [ "$SH_OS" = "WSL" ]; then
-    export FZF_ALT_C_COMMAND="fd -t d . ~ /mnt/c/Users/jedia"
+    export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
   else
     export FZF_ALT_C_COMMAND="fd -t d . ~"
   fi
@@ -190,7 +190,7 @@ fi
 
 # Only load nodejs when needed
 lazynvm() {
-  unset -f nvm node npm
+  unset -f nvm node npm diff-so-fancy
   export NVM_DIR=~/.nvm
   [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 }
@@ -210,10 +210,14 @@ npm() {
   npm $@
 }
 
+diff-so-fancy() {
+  lazynvm
+  diff-so-fancy $@
+}
+
 # use diff-so-fancy for regular diffs
 unalias diff
 diff() {
-  lazynvm
   command diff -u $@ | diff-so-fancy
 }
 
