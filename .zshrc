@@ -180,11 +180,12 @@ fi
 
 # Always work in a tmux session if tmux is installed
 # Modified from https://github.com/chrishunt/dot-files/blob/master/.zshrc
+# Currently experimenting with setting this in Windows Terminal settings
 if which tmux 2>&1 >/dev/null; then
   if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] \
   && [ "$TERM_PROGRAM" != "vscode" ] && [ "$USING_VSCODE" != "true" ] \
-  && [[ -n "$WT_SESSION" || "$SH_OS" != "WSL" ]]; then
-    tmux new-session -A -s sesh && exit || { :; cmd.exe /C wt; exit }
+  && [[ "$SH_OS" != "WSL" ]]; then
+    tmux new-session -A -s sesh && exit # || { :; cmd.exe /C wt; exit }
   fi
 fi
 
