@@ -154,6 +154,7 @@ zstyle ':completion:*:man:*'      menu yes select
 # Use ripgrep instead of find for fzf
 if type rg &> /dev/null && type fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND="rg --files --hidden -g '!AppData/' -g '!.git/' -g '!node_modules/' "
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   # But ripgrep has terrible directory search so we'll use fd
   if [ "$SH_OS" = "WSL" ]; then
     export FZF_ALT_C_COMMAND="fdfind -t d . ~ /mnt/c/Users/jedia"
