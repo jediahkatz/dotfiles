@@ -77,7 +77,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git gitfast
-    docker docker-compose
+    docker docker-compose kubectl
     fzf fzf-tab
     zsh-z zsh-autosuggestions zsh-syntax-highlighting
 )
@@ -190,32 +190,39 @@ if which tmux 2>&1 >/dev/null; then
   fi
 fi
 
-# Only load nodejs when needed
-lazynvm() {
-  unset -f nvm node npm diff-so-fancy
-  export NVM_DIR=~/.nvm
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# ####################################
+# ###### Only load nodejs when needed:
+NVM_DIR="$HOME/.nvm"
+
+# Skip adding binaries if there is no node version installed yet
+if [ -d $NVM_DIR/versions/node ]; then
+  NODE_GLOBALS=(`find $NVM_DIR/versions/node -maxdepth 3 \( -type l -o -type f \) -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
+fi
+NODE_GLOBALS+=("nvm", "npm", "diff-so-fancy")
+
+load_nvm() {
+  # Unset placeholder functions
+  for cmd in "${NODE_GLOBALS[@]}"; do unset -f ${cmd} &>/dev/null; done
+
+  # Load NVM
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+  # (Optional) Set the version of node to use from ~/.nvmrc if available
+  nvm use 2> /dev/null 1>&2 || true
+
+  # Do not reload nvm again
+  export NVM_LOADED=1
 }
 
-nvm() {
-  lazynvm
-  nvm $@
-}
+for cmd in "${NODE_GLOBALS[@]}"; do
+  # Skip defining the function if the binary is already in the PATH
+  if ! which ${cmd} &>/dev/null; then
+    eval "${cmd}() { unset -f ${cmd} &>/dev/null; [ -z \${NVM_LOADED+x} ] && load_nvm; ${cmd} \$@; }"
+  fi
+done
 
-node() {
-  lazynvm
-  node $@
-}
-
-npm() {
-  lazynvm
-  npm $@
-}
-
-diff-so-fancy() {
-  lazynvm
-  diff-so-fancy $@
-}
+# ############## End lazy nodejs loader
+# ######################################
 
 # use diff-so-fancy for regular diffs
 unalias diff
