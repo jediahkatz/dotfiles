@@ -1,0 +1,5 @@
+The scripts in this folder should be run as follows from the `dotfiles` directory:
+
+1. (WSL only) Run `./scripts/powershell.ps1` from Powershell, and then follow the additional steps linked in that script.
+2. Run `./scripts/bash.sh` from Bash, entering root password for `sudo` and user password for `chsh` when prompted.
+3. Run `./scripts/zsh.sh` from Zsh, entering root password for `sudo` when prompted.
