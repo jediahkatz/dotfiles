@@ -217,6 +217,10 @@ live_config_reload: true
 # Want to add a binding (e.g. "PageUp") but are unsure what the X sequence
 # (e.g. "\x1b[5~") is? Open another terminal (like xterm) without tmux,
 # then run `showkey -a` to get the sequence associated to a key combination.
+font:
+  normal:
+    family: "MesloLGS NF"
+
 key_bindings:
   - { key: V,        mods: Control|Shift,    action: Paste               }
   - { key: C,        mods: Control|Shift,    action: Copy                }
