@@ -7,6 +7,7 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="/home/jediahkatz/.local/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -123,10 +124,11 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ls="lsd"
-alias jedia="cd /mnt/c/Users/jedia"
+alias jedia="/mnt/c/Users/jedia"
 alias reload="exec ${SHELL} -l"
 alias path="echo -e '${PATH//:/\\n}' | cat"
 alias help="nano -v ~/.help"
+alias cmd="cmd.exe /C"
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
@@ -331,6 +333,10 @@ if [ "$SH_OS" = "WSL" ]; then
   }
 
 fi
+
+# Support GUI
+export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+export LIBGL_ALWAYS_INDIRECT=1
 
 ######### END WSL ONLY CONFIGURATIONS
 #####################################
