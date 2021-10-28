@@ -225,6 +225,9 @@ done
 
 # ############## End lazy nodejs loader
 # ######################################
+function mcd() {
+   mkdir $1 && cd $1
+}
 
 # use diff-so-fancy for regular diffs
 unalias diff
