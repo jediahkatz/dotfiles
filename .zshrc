@@ -78,9 +78,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git gitfast
-    docker docker-compose kubectl
+    docker # docker-compose kubectl
     fzf fzf-tab
-    zsh-z zsh-autosuggestions zsh-syntax-highlighting
+    zsh-z zsh-autosuggestions fast-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -129,6 +129,8 @@ alias reload="exec ${SHELL} -l"
 alias path="echo -e '${PATH//:/\\n}' | cat"
 alias help="nano -v ~/.help"
 alias cmd="cmd.exe /C"
+# add tracked & untracked files + commit with message
+alias gcam!="git add --all && git commit -m"
 # Intuitive map function
 # For example, to list all directories that contain a certain file:
 # find . -name .gitattributes | map dirname
