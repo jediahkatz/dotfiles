@@ -232,6 +232,7 @@ function mcd() {
 }
 
 # use diff-so-fancy for regular diffs
+# note: next line (unalias) caused an error on osx
 unalias diff
 diff() {
   command diff -u $@ | diff-so-fancy
