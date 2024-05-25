@@ -6,8 +6,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="/home/jediahkatz/.local/bin:$PATH"
+# export "PATH=$HOME/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
@@ -187,7 +188,7 @@ fi
 # Modified from https://github.com/chrishunt/dot-files/blob/master/.zshrc
 # Currently experimenting with setting this in Windows Terminal settings
 if which tmux 2>&1 >/dev/null; then
-  if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] \
+  if [ $TERM != "screen-256color" ] && [ $TERM != "screen" ] && [ -z $TMUX ] \
   && [ "$TERM_PROGRAM" != "vscode" ] && [ "$USING_VSCODE" != "true" ] \
   && [[ "$SH_OS" != "WSL" ]]; then
     tmux new-session -A -s sesh && exit # || { :; cmd.exe /C wt; exit }
@@ -233,7 +234,7 @@ function mcd() {
 
 # use diff-so-fancy for regular diffs
 # note: next line (unalias) caused an error on osx
-unalias diff
+# unalias diff
 diff() {
   command diff -u $@ | diff-so-fancy
 }

@@ -5,7 +5,7 @@
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Add symlinks
-ln -s $(pwd)/.alacritty.yml ~/.alacritty.yml
+ln -s $(pwd)/.alacritty.toml ~/.alacritty.toml
 ln -s $(pwd)/.p10k.zsh ~/.p10k.zsh
 rm ~/.zshrc
 ln -s $(pwd)/.zshrc ~/.zshrc
@@ -28,6 +28,12 @@ packages=(
 sudo apt install "$packages"
 
 # OSX only
+
+# Install homebrew and brew packages
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "/Users/jediahkatz/.zprofile"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 packages=(
     tmux fd
     yarn
