@@ -1,9 +1,11 @@
 # cursor_style = "Block"
 # custom_cursor_colors = false
 # hide_cursor_when_typing = false
-live_config_reload = true
 # render_timer = false
 # "window.opacity" = 1.0
+
+[general]
+live_config_reload = true
 
 [bell]
 animation = "EaseOutExpo"

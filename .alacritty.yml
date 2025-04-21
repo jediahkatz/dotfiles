@@ -169,7 +169,8 @@ hide_cursor_when_typing: false
 cursor_style: Block
  
 # Live config reload (changes require restart)
-live_config_reload: true
+general:
+  live_config_reload: true
  
 # Shell
 #

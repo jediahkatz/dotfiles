@@ -203,7 +203,7 @@ NVM_DIR="$HOME/.nvm"
 if [ -d $NVM_DIR/versions/node ]; then
   NODE_GLOBALS=(`find $NVM_DIR/versions/node -maxdepth 3 \( -type l -o -type f \) -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
 fi
-NODE_GLOBALS+=("nvm", "npm", "diff-so-fancy")
+NODE_GLOBALS+=("nvm" "npm" "diff-so-fancy")
 
 load_nvm() {
   # Unset placeholder functions
@@ -350,3 +350,6 @@ export LIBGL_ALWAYS_INDIRECT=1
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH=$PATH:/Users/jediah/everysphere/bin
+export EVERYSPHERE_ROOT=/Users/jediah/everysphere
