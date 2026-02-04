@@ -103,7 +103,7 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-export EDITOR='nano'
+export EDITOR='micro'
 
 # Set $SH_OS variable
 if test -f /proc/version && rg -q microsoft /proc/version; then
@@ -272,6 +272,21 @@ function code() {
 
 # Use hub to wrap git
 function git() { hub $@; }
+
+# gcol: fuzzy-select a recently checked-out branch
+# Usage: gcol [prefix] — optional prefix pre-filters the list (e.g. gcol feat)
+gcol() {
+  local branch
+  branch=$(git for-each-ref --sort=-committerdate refs/heads/ \
+    --format='%(refname:short)' \
+    | fzf --height 40% --reverse --prompt='gcol> ' --query="${1:-}")
+  [[ -n "$branch" ]] && git checkout "$branch"
+}
+
+# Set special env var when opening Cursor from zsh
+function cursor() {
+  USING_VSCODE=true command cursor $@
+}
 
 ##################################
 ########## WSL ONLY CONFIGURATIONS
