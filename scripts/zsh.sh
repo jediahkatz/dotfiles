@@ -1,4 +1,5 @@
 #!/usr/bin/zsh
+# NOTE: This script is a legacy reference. For macOS, use install-macos.sh instead.
 # NOTE: THIS SCRIPT IS NOT CURRENTLY RUNNABLE
 
 # Install oh-my-zsh
@@ -31,7 +32,7 @@ sudo apt install "$packages"
 
 # Install homebrew and brew packages
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "/Users/jediahkatz/.zprofile"
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> "$HOME/.zprofile"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 packages=(

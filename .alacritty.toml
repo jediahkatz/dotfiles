@@ -22,7 +22,7 @@ size = 13.0
 # AppleFontSmoothing = 0
 
 [font.normal]
-family = "MesloLGS NF"
+family = "MesloLGS Nerd Font"
 
 [[keyboard.bindings]]
 action = "Paste"
